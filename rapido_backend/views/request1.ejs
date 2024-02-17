@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <h1>requests</h1>
+   <ul id="dataList"></ul>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
+   <script>
+     const dataList = document.getElementById('dataList');
+    const socket = io();
+    const cookie = document.cookie.split(";");
+    console.log("cookie",cookie);
+    const body = {};
+            cookie.forEach(element => {
+                const [name,value] = element.trim().split("=");
+                body[name]=value;
+            });
+    let existingData=[];
+
+
+
+    async function acceptfn(rid){
+            try {
+                console.log(rid)
+                const res = await fetch(`/accept?id=${rid}`);
+                const data = await res.json();
+                console.log(data.result);
+                if(data.result){
+                    location.assign(window.location.href);
+                }
+            } catch (error) {
+                
+            }
+                  
+        }
+
+
+    function render() {
+      dataList.innerHTML = ''; // Clear existing data
+      existingData.forEach(item => {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `Name: ${item.Name} - Source : ${item.Source} - Destination : ${item.Destination} <button id="btn" onclick="acceptfn('${item._id}')">Accept</button>`;
+        dataList.appendChild(listItem);
+      });
+    }
+    async function fetchRequestData() {
+      const result = await fetch('/getrequest') // Replace with your actual API endpoint
+      const data = await result.json();
+      if(data.requests){
+        existingData = data.requests;
+        render();
+      }
+    }
+    window.addEventListener('load',fetchRequestData)
+     socket.on('dataChange', (change) => {
+      console.log(change);
+      console.log("did",body["id"]);
+      if (change.operationType === 'insert' && change.fullDocument.did ===body["id"].slice(7,31) ) {
+        const _id=change.fullDocument._id;
+        const Name = change.fullDocument.Name;
+        const Source=change.fullDocument.Source;
+        const Destination=change.fullDocument.Destination;
+        console.log(name)
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `Name: ${Name} - Source : ${Source} - Destination : ${Destination} <button id="btn" onclick="acceptfn('${_id}')">Accept</button>`;
+        dataList.appendChild(listItem);
+      }
+    });
+   </script>
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div style="display: flex;justify-content: space-between;">
+
+        <h1>PAID SUCESSFULLY</h1>
+        <div >
+          
+            <button id="book" style="height: 50px;" onclick=backfn()>back to home</button>
+     
+    
+        </div>
+       
+    
+        </div>
+        <script>
+            function backfn(){
+            const currentUrl = window.location.href;
+            const [url,uid] = currentUrl.split("?");
+            const id = uid.split("=")[1];
+                location.assign(`/?id=${id}`);
+            }
+        </script>
+</body>
+</html>

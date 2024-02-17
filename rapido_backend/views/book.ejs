@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form method="post" enctype="application/x-www-form-urlencoded">
+        <label>enter source : </label>
+        <input type="text" id="source" name="source" required/></br>
+        <label>enter destination: </label>
+        <input type="text" id="destination" name="destination" required/></br>
+        <label>choose vehicle : </label>
+        <input type="text" id="vehicle" name="vehicle" required/>
+        <input type="submit" value="submit"/>
+    </form>
+    <ul id="dataList">
+       
+    </ul>
+
+
+    <script>
+        const form = document.querySelector("form");
+        const dataList = document.getElementById('dataList');      
+        const cookie = document.cookie.split(";");
+        let existingData=[];
+
+        function render() {
+            dataList.innerHTML = '';
+            existingData.forEach(item => {
+                console.log("item",item);
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `Name : ${item.Name} - Location : ${item.Cur_location}   <button id="selectdriver" onclick="pick('${item._id}')">select</button>`;
+                dataList.appendChild(listItem);
+            });
+        }
+        
+        async function pick(did){
+            console.log("click event");
+            const body = {};
+            cookie.forEach(element => {
+                const [name,value] = element.trim().split("=");
+                body[name]=value;
+            });
+            const res = await fetch("/newbook/request",{
+                method : "POST",
+                body:JSON.stringify({source :body["source"] ,dest:body["dest"],id:body["id"],did:did}),
+                headers:{"Content-Type":"application/json"}
+            });
+            const data = await res.json();
+            if(data.reqsend){
+                const rid = data.reqsend._id;
+                const currentUrl = window.location.href;
+                const [url,uid] = currentUrl.split("?");
+                const id = uid.split("=")[1];
+                location.assign(`/newbook/request?id=${id}&rid=${rid}`);
+            }
+            // const res = await fetch(`/newbook/request?source=${body["source"]}&dest=${body["dest"]}&did:${did}`);
+
+        }
+        form.addEventListener("submit",async(e)=>{
+            e.preventDefault();
+         
+            const source = form.source.value;
+            const vehicle = form.vehicle.value;
+            const destination = form.destination.value;
+
+            console.log(source,vehicle);
+            const url = window.location.href;
+         try {
+            const res = await fetch(url,{
+                method:"POST",
+                body:JSON.stringify({source,vehicle,destination}),
+                headers:{"Content-Type":"application/json"}
+            })
+            const data = await res.json();
+            if(data.driver){
+                existingData = data.driver;
+                render();
+
+            }
+        
+            
+         } catch (error) {
+            console.log(error)
+         }
+           
+        })
+    </script>
+</body>
+</html>

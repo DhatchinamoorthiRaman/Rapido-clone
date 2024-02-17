@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  
+    <div style="display: flex;justify-content: space-between;" >
+        <div>
+            <h1>BOOKING HISTORY</h1>
+    
+            <% for (let i = 0; i < history.length; i++) { %>
+                <li><%= history[i].Source %> to <%= history[i].Destination %> - AMOUNT <%=history[i].Amount %></li>
+              <% } %>
+
+        </div>
+          <div >
+              
+            <button id="book" style="height: 50px;" onclick=backfn()>back to home</button>
+     
+    
+        </div>
+    </div>
+    <script>
+        function backfn(){
+        const currentUrl = window.location.href;
+        const [url,uid] = currentUrl.split("?");
+        const id = uid.split("=")[1];
+            location.assign(`/?id=${id}`);
+        }
+    </script>
+</body>
+</html>

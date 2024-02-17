@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>HOME PAGE</title>
+   
+</head>
+<body>
+    <div style="display: flex;justify-content: space-between;">
+
+    <h1>home</h1>
+    <div >
+      
+        <button id="book" style="height: 50px;" onclick=bookfn()>book a ride </button>
+        <button  id="logout" onclick=logoutfn() style="height: 50px;">logout</button>
+        <button id="history" onclick="historyfn()" style="height:50px;">Booking History</button>
+
+    </div>
+   
+
+    </div>
+
+ 
+    <script>
+        // import express from "express"
+        const logoutbtn = document.querySelector("#logout")
+        function logoutfn(){
+            location.assign("/login");
+        }
+        const book = document.querySelector("#book");
+        function bookfn(){
+               const currentUrl = window.location.href;
+            //    const newPath = '/request';
+            //    const newUrl = `${currentUrl}${newPath}`;
+            //    console.log(newUrl);
+            const [url,uid] = currentUrl.split("?");
+            const id = uid.split("=")[1];
+            
+            location.assign(`/newbook?id=${id}`);
+        }
+        async function historyfn(){
+            const currentUrl = window.location.href;
+            const [url,uid] = currentUrl.split("?");
+            const id = uid.split("=")[1];
+            location.assign(`/bookinghistory?id=${id}`);
+            
+        }
+        
+    </script>
+   
+</body>
+</html>

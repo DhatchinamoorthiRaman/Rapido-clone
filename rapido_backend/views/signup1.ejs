@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>signup</h1>
+    <form method="post" enctype="application/x-www-form-urlencoded">
+        <label for="email">Email : </label>
+        <input type="email" name = "email" required/></br>
+        <div class="emailerror"></div></br>
+        <label for="password">Password : </label>
+        <input type="password" name = "password" required/></br>
+        <div class="passworderror"></div></br>
+        <input type="submit" value="submit"/>
+    </form>
+    <script>
+        const form = document.querySelector("form");
+        const emailerr = document.querySelector(".emailerror")
+        const passerr = document.querySelector(".passworderror")
+        form.addEventListener("submit",(async(e)=>{ 
+            e.preventDefault();
+
+            emailerr.textContent="";
+            passerr.textContent="";
+            const email = form.email.value;
+            const password = form.password.value;
+            console.log(email,password)
+            try {
+                console.log("try")
+                const res = await fetch("/signup",{
+                method:'POST',
+                body : JSON.stringify({email,password}),
+                headers:{'Content-Type':'application/json'}
+            })
+            console.log("html");
+            const data = await res.json();
+            console.log(data)
+            
+            if(data.error){
+                emailerr.textContent= data.error.email
+                passerr.textContent = data.error.password
+            }
+            if(data.driver){
+
+                location.assign("/details")
+            }
+            // console.log(res);
+            } catch (error) {
+                console.log(err);
+            }
+            
+
+        }))
+    </script>
+
+</body>
+</html>

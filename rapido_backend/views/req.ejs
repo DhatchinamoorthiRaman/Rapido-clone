@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>request send</h1>
+    <% if(result.length!=0){ %>
+        <ul>
+            <% for (let i = 0; i < result.length; i++) { %>
+                <li><button id="cancel" onclick="cancelfn(`<%=result[i]._id%>`)">Cancel</button> <button id="payment" onclick="paymentfn(`<%=result[i]._id%>`)">Make Payment</button></li>
+              <% } %>
+        </ul>
+     
+    <% } %>
+    <!-- <h1>Track ur captain</h1> -->
+
+    <script>
+        async function cancelfn(rid){
+            console.log(rid)
+            const res = await fetch(`/cancel?rid=${rid}`);
+            const data = await res.json();
+            if(data.result){
+                location.assign("/");
+            }
+            
+        }
+        async function paymentfn(rid){
+            const res = await fetch(`/makepayment?id=${rid}`)
+            const data = await res.json();
+            console.log(data.result);
+            if(data.result){
+                location.assign("/paymentsuccess");
+            }
+        }
+    </script>
+
+</body>
+</html>

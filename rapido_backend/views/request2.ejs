@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>REQUESTS</h1>
+    <ul>
+        <% for (let i = 0; i < requests.length; i++) { %>
+            <li>Name : <%= requests[i].Name %> - Source : <%= requests[i].Source %> - Destination : <%=requests[i].Destination%> <button id="accept" onclick="acceptfn(`<%=requests[i]._id%>`)">Accept</button> <button id="cancel" onclick="cancelfn(`<%=requests[i]._id%>`)">Cancel</button></li>
+          <% } %>
+    </ul>
+    <h1>Accepts</h1>
+    <ul>
+        <% for (let i = 0; i < accepts.length; i++) { %>
+            <li>Name : <%= accepts[i].Name %> - Source : <%= accepts[i].Source %> - Destination : <%=accepts[i].Destination%> <button id="start" onclick="startfn(`<%=accepts[i]._id%>`)">Start ride</button> <button id="complete" onclick="completefn(`<%=accepts[i]._id%>`)">Complete ride</button></li>
+          <% } %>
+    </ul>
+
+    <script>
+        const accept = document.querySelector("#accept")
+        const cancel = document.querySelector("#cancel")
+       
+        async function acceptfn(rid){
+            try {
+                console.log(rid)
+                const res = await fetch(`/accept?id=${rid}`);
+                const data = await res.json();
+                console.log(data.result);
+                if(data.result){
+                    location.assign("/request");
+                }
+            } catch (error) {
+                
+            }
+                  
+        }
+        async function cancelfn(rid){
+            console.log(rid)
+            const res = await fetch(`/cancel?id=${rid}`);
+            const data = await res.json();
+            console.log(data.result);
+            if(data.result){
+                location.assign("/request");
+            }
+            if(data.error){
+                alert("cannot be canceled");
+            }
+        }
+
+        async function startfn(rid){
+           const res =  await fetch(`/start?id=${rid}`);
+
+        }
+        async function completefn(rid){
+            console.log(rid);
+           const res =  await fetch(`/complete?id=${rid}`);
+
+        }
+    </script>
+  
+    
+
+    
+</body>
+</html>

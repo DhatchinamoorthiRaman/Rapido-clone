@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Details</title>
+</head>
+<body>
+    <h1>Employee Details Form</h1>
+    <form action="/submit" method="post" action="/submit" enctype="multipart/form-data">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br>
+
+        <label for="dob">DOB:</label>
+        <input type="date" id="dob" name="dob" required><br>
+
+        <label for="gender">Gender:</label>
+        <!-- <label><input type="checkbox" id="male" name="gender" value="Male"> MALE </label>
+        <label><input type="checkbox" id="female" name="gender" value="Female" > FEMALE</label><br> -->
+        <input type="text" id="gender" name="gender" required><br>
+
+        <label for="mobile_no">Mobile_no:</label>
+        <input type="text" id="mobile_no" name="mobile_no" required><br>
+
+        <label for="vehicle">Vehicle:</label>
+        <input type="text" id="vehicle" name="vehicle" required><br>
+
+        <label for="profile_pic">Profile_pic:</label>
+        <input type="file" id="profile_pic" name="profile_pic" required><br>
+
+        <label for="license">License : </label>
+        <input type="file" id="license" name="license" required><br>
+
+        
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
+ <!-- <script>
+        const form = document.querySelector("form");
+        form.addEventListener("submit",async(e)=>{
+            console.log("submitted");
+            e.preventDefault();
+            const Name= form.name.value;
+            const DOB = form.dob.value;
+            const Gender = form.gender.value;
+            // const Gender = form.querySelectorAll('input[name="gender"]:checked');
+            const Mobile_no = form.mobile_no.value;
+            const Vehicle = form.vehicle.value;
+
+            console.log("html : " , Gender);
+            try {
+                const res = await fetch("/submit", {
+                    method: "POST",
+                    body: JSON.stringify({ Name, DOB, Gender, Mobile_no }),
+                    headers:{'Content-Type':'application/json'}
+                })
+               
+            
+            
+                
+            } catch (error) {
+                console.log(error);
+            }
+          
+        })
+    </script>

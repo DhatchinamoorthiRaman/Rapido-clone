@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+<body>
+    <h1>Request send</h1>
+    <ul id="dataList"></ul>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
+    <script>
+        const dataList = document.getElementById('dataList');
+        const socket = io();
+        const cookie = document.cookie.split(";");
+        const rid = window.location.href.split("?")[1].split("&")[1].split("=")[1];
+        console.log("cookie:",cookie);
+        const body = {};
+            cookie.forEach(element => {
+                const [name,value] = element.trim().split("=");
+                body[name]=value;
+            });
+        let existingData = [];
+
+        async function paymentfn(rid){
+            const res = await fetch(`/makepayment?id=${rid}`)
+            const data = await res.json();
+            console.log(data.result);
+            if(data.result){
+       
+            const id = window.location.href.split("?")[1].split("&")[0].split("=")[1];
+                location.assign(`/paymentsuccess?id=${id}`);
+            }
+        }
+        
+        function render() {
+            dataList.innerHTML = ''; // Clear existing data
+            existingData.forEach(item => {
+                console.log("item",item);
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `Booking id : ${item._id}  --   <button id="btn" onclick="paymentfn('${item._id}')">Make Payment</button>`;
+                dataList.appendChild(listItem);
+            });
+        }
+        async function fetchRequestData() {
+            const result = await fetch('/newbook/getrequest') // Replace with your actual API endpoint
+            const data = await result.json();
+            console.log(data.paymentrequest);
+            if (data.paymentrequest) {
+                existingData = data.paymentrequest;
+                render();
+            }
+        }
+        window.addEventListener('load', fetchRequestData)
+        socket.on('requestChange', (change) => {
+            console.log(change);
+            if (change.operationType === 'update' && change.documentKey._id === rid) {
+                const _id = change.documentKey._id
+                console.log(_id)
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `Booking id : ${_id}  --   <button id="btn" onclick="paymentfn('${_id}')">Make Payment</button>`;
+                dataList.appendChild(listItem);
+            }
+        });
+
+    </script>
+    
+</body>
+</html>
